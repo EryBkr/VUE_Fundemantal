@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <!-- Vue Import CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        {{message}}
+        <!-- v-model ile değişkene two way binding yapabiliyoruz -->
+        <!-- Değişiklikler direkt dom a yansır -->
+        <!-- input içerisindeyken enter a basarsak fonksiyonumuz çalışacak -->
+        <input type="text" v-model="userComment" @keyup.enter="addComment"/>
+        <!-- Buttona basarsakta fonksiyonumuz tetiklenecek -->
+        <!-- v-if şartı geçerli ise belli alanları gösterebiliyoruz -->
+        <button v-if="userComments.length>3" @click="addComment">Yorum Ekle</button>
+        <h1>{{userComment}}</h1>
+
+        <!-- V-For kullanıımı -->
+        <ul>
+            <li v-for="comment in userComments">
+                {{comment}}
+            </li>
+        </ul>
+      </div>
+    <script>
+        //#app selector u ile app id li elementi değişken gibi kullanacağız
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                userComment: '',
+                userComments:[
+                    "Yorum 1",
+                    "Yorum 2",
+                    "Yorum 3"
+                ]
+            },
+            methods: {
+                //Fonksiyonların kullanımı
+                //addComment i bir şekilde tetikleyeceğiz
+                addComment:function(){
+                    //İnputtan giriş yaptığımız data userComments array ine eklenecek
+                    this.userComments.push(this.userComment)
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
