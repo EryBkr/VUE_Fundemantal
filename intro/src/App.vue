@@ -1,6 +1,6 @@
 <template>
   <!-- ProductAdd componenti tarafından tetiklenecek fonksiyonu handle edeceğiz -->
-  <ProductAdd @add:product="addProduct"/>
+  <ProductAdd @add:product="addProduct" />
 
   <!-- elimde ki products arrayıni ProductList componentine props olarak gönderiyorum -->
   <!-- ProductList componentinden gelen aksiyon ile bind işlemi gerçekleştirdik -->
@@ -25,68 +25,59 @@ export default {
   data() {
     return {
       //bu componente ait data lar.Props veya event emitter ile componentler arası taşınabilir
-      products: [
-        {
-          id: 1,
-          categoryId: 2,
-          productName: "Chai",
-          quantityPerUnit: "Good",
-          unitPrice: 44,
-          unitsInStock: 5,
-        },
-        {
-          id: 2,
-          categoryId: 2,
-          productName: "Samsung",
-          quantityPerUnit: "Good",
-          unitPrice: 5000,
-          unitsInStock: 50,
-        },
-        {
-          id: 3,
-          categoryId: 2,
-          productName: "Iphone",
-          quantityPerUnit: "Good",
-          unitPrice: 6500,
-          unitsInStock: 35,
-        },
-        {
-          id: 4,
-          categoryId: 2,
-          productName: "MSI Notebook",
-          quantityPerUnit: "Good",
-          unitPrice: 6000,
-          unitsInStock: 8,
-        },
-        {
-          id: 5,
-          categoryId: 2,
-          productName: "Bosh",
-          quantityPerUnit: "Good",
-          unitPrice: 2300,
-          unitsInStock: 19,
-        },
-      ],
+      products: [],
     };
   },
+  //component yüklendikten sonra çalışacak
+  mounted() {
+    this.getProducts();
+  },
   methods: {
+    //ürünleri apiden çekecek olan fonksiyon
+    async getProducts() {
+      const result = await fetch("http://localhost:3000/products");
+      const data = await result.json();
+      this.products = data;
+    },
     //ProductList componentinden gelen fonksiyonu temsil ediyor aslında
-    deleteProduct(product) {
-      //Gelen product ın id değerine eşit olmayan productları product dizimize tanıttık
-      this.products = this.products.filter(
-        (productToFilter) => productToFilter.id !== product.id
-      );
+    async deleteProduct(product) {
+      //gelen product ın api tarafından silinme işlemini gerçekleştiriyorum
+      await fetch("http://localhost:3000/products/" + product.id, {
+        method: "DELETE",
+      });
+
+      //listenin güncellenmesi için getProducts i çağıracağım
+      this.getProducts();
     },
     //alt komponentin tetikleyeceği fonksiyon
-    updateProduct(product) {
-      alert(`Güncellenecek ürünün adı: ${product.productName}`);
+    async updateProduct(product) {
+      //PUT işlemi yapacağız
+      const result = await fetch("http://localhost:3000/products/"+product.id, {
+        method: "PUT",
+        body: JSON.stringify(product),
+        headers: { "Content-Type": "application/json" },
+      });
+
+       //Product ı resulttan okuduk
+      const updatedProduct = await result.json();
+
+        //array içerisinden  component içerisindeki datamızı güncelliyorum
+      this.products = this.products.map(p=>p.id===updatedProduct.id?updatedProduct:product);
     },
-    addProduct(product){
-      //Product ı new ledik
-      const newProduct={...product};
+    async addProduct(product) {
+      //POST işlemi yapacağız
+      const result = await fetch("http://localhost:3000/products", {
+        method: "POST",
+        body: JSON.stringify(product),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      //Product ı resulttan okuduk
+      const newProduct = await result.json();
+
       //array'in yeni bir instance ı alıp ürünü  ekledik
-      this.products=[...this.products,newProduct];
-    }
+      this.products = [...this.products, newProduct];
+    },
   },
 };
 </script>

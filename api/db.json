@@ -1,0 +1,37 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "categoryId": 2,
+      "productName": "Samsung",
+      "quantityPerUnit": "24",
+      "unitPrice": "24",
+      "unitsInStock": 53
+    },
+    {
+      "id": 2,
+      "categoryId": 1,
+      "productName": "MSI 23",
+      "quantityPerUnit": "24",
+      "unitPrice": "24",
+      "unitsInStock": 53
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "cateogryName": "Tech",
+      "seoUrl": "tech"
+    },
+    {
+      "id": 2,
+      "cateogryName": "Gym",
+      "seoUrl": "gym"
+    },
+    {
+      "id": 3,
+      "cateogryName": "Wear",
+      "seoUrl": "wear"
+    }
+  ]
+}
